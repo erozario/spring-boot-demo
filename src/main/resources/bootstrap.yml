@@ -1,0 +1,20 @@
+spring:
+  application: 
+    name: demoapp
+  datasource:
+    url: jdbc:postgresql://${DB_SERVER:db}:${DB_PORT:5432}/${DB_NAME:demoapp}
+  data:
+    rest:
+      base-path: /data
+  jpa:
+    hibernate.ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+  cloud:
+    vault:
+      host: ${VAULT_SERVER:vault}
+      port: ${VAULT_PORT:8200}
+      scheme: http
+      token: ${VAULT_TOKEN}
+      database:
+        enabled: true
+        role: ${VAULT_ROLE:springdemo}

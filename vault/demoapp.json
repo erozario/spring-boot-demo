@@ -1,0 +1,1 @@
+{"policy": "path \"secret/*\" {\n  capabilities = [\n    \"read\",\n    \"list\",\n  ]\n}\n\npath \"database/creds/springdemo\" {\n  capabilities = [\n    \"read\",\n  ]\n}\n\npath \"sys/revoke/database/creds/springdemo/*\" {\n  capabilities = []\n}\n"}

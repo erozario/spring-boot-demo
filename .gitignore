@@ -1,0 +1,9 @@
+*.jks
+*.log
+.gradle/
+.idea/
+build/
+*.iml
+bin
+.attach*
+vault_init.txt
