@@ -122,3 +122,8 @@ curl -X POST http://localhost:8080/data/messages \
 
 curl -X GET http://localhost:8080/data/messages
 ```
+### Shutdown stack
+
+```shell
+docker-compose down -v
+```
