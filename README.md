@@ -23,17 +23,29 @@ docker-compose --no-ansi exec -e VAULT_CLI_NO_COLOR=1 -e VAULT_ADDR=http://127.0
   vault operator init -key-shares=1 -key-threshold=1 > vault_init.txt
 ```
 
+* Export vault unseal key
+
+```shell
+export VAULT_KEY=$(cat vault_init.txt | cut -d  ' ' -f4 | head -n1 | tr -d '\r')
+```
+
+* Export vault root token
+
+```shell
+export VAULT_ROOT_TOKEN=$(cat vault_init.txt | cut -d  ' ' -f4 | head -n3 | tail -1 | tr -d '\r')
+```
+
 * Unseal vault:
 
 ```shell
 docker-compose exec -e VAULT_ADDR=http://127.0.0.1:8200 vault \
-  vault operator unseal <unseal key from vault_init.txt>
+  vault operator unseal `echo $VAULT_KEY`
 ```
 
 * Change the root token value from root_token in vault_root.sh
 
 ```shell
-sed -i s/root_token/<root token from vault_init.txt>/g vault_root.sh
+sed -i s/root_token/`echo $VAULT_ROOT_TOKEN`/g vault_root.sh
 ```
 
 ### Configure the database secrets engine with PostgreSQL
@@ -53,9 +65,10 @@ psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 543
 * Setup vault policy
 
 ```shell
-curl -H "X-Vault-Token: <root token from vault_init.txt>" \
+curl \
+  -H "X-Vault-Token: $VAULT_ROOT_TOKEN" \
   --request PUT --data @./vault/demoapp.json \
-  http://localhost:8200/v1/sys/policy/demoapp
+  http://localhost:8200/v1/sys/policy/demoapps
 ```
 
 * Setup the connection from Vault to PostgreSQL
@@ -78,33 +91,25 @@ curl -H "X-Vault-Token: <root token from vault_init.txt>" \
 * Try to retrieve database credentials
 
 ```shell
-  ./vault_root.sh read database/creds/springdemo
+./vault_root.sh read database/creds/springdemo
 ```
 
 * Try to connect to PostgreSQL with these credentials
 
 ```shell
-  psql -h localhost -U <username-from-vault-output> --port 5432 demoapp
+psql -h localhost -U <username-from-vault-output> --port 5432 demoapp
 ```
 
 * Use vault to create a new application token:
 
 ```shell
-./vault_root.sh token create -policy=demoapp
-
-Key                Value
----                -----
-token              3c5fafa5-a4a2-782e-c84d-6b21fd987138
-token_accessor     46d50f03-b2ab-532f-0af3-38904f71a666
-token_duration     2160h
-token_renewable    true
-token_policies     [default demoapp]
+./vault_root.sh token create -policy=demoapp > vault_app.txt
 ```
 
 * Export application token:
 
 ```shell
-export VAULT_TOKEN=<token-from-the-vault-output>
+export VAULT_TOKEN=$(cat vault_app.txt | cut -d  ' ' -f15 | head -n3 | tail -1)
 ```
 
 * Build and run the web application container

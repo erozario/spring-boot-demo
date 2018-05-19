@@ -7,3 +7,4 @@ build/
 bin
 .attach*
 vault_init.txt
+vault_app.txt
