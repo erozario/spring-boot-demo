@@ -1,4 +1,4 @@
-# Spring Boot demo
+git@github.com:erozario/spring-boot-demo.git# Spring Boot demo
 
 ## Getting started
 
@@ -68,7 +68,7 @@ psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 543
 curl \
   -H "X-Vault-Token: $VAULT_ROOT_TOKEN" \
   --request PUT --data @./vault/demoapp.json \
-  http://localhost:8200/v1/sys/policy/demoapps
+  http://localhost:8200/v1/sys/policy/demoapp
 ```
 
 * Setup the connection from Vault to PostgreSQL
@@ -109,7 +109,7 @@ psql -h localhost -U <username-from-vault-output> --port 5432 demoapp
 * Export application token:
 
 ```shell
-export VAULT_TOKEN=$(cat vault_app.txt | cut -d  ' ' -f15 | head -n3 | tail -1)
+export VAULT_TOKEN=$(cat vault_app.txt | cut -d  ' ' -f15 | head -n3 | tail -1 | tr -d '\r')
 ```
 
 * Build and run the web application container
@@ -127,6 +127,7 @@ curl -X POST http://localhost:8080/data/messages \
 
 curl -X GET http://localhost:8080/data/messages
 ```
+
 ### Shutdown stack
 
 ```shell
