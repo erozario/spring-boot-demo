@@ -1,4 +1,4 @@
-git@github.com:erozario/spring-boot-demo.git# Spring Boot demo
+# Spring Boot Demo
 
 ## Getting started
 
