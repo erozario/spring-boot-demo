@@ -109,7 +109,7 @@ psql -h localhost -U <username-from-vault-output> --port 5432 demoapp
 * Export application token:
 
 ```shell
-export VAULT_TOKEN=$(cat vault_app.txt | cut -d  ' ' -f15 | head -n3 | tail -1)
+export VAULT_TOKEN=$(cat vault_app.txt | cut -d  ' ' -f15 | head -n3 | tail -1 | tr -d '\r')
 ```
 
 * Build and run the web application container
