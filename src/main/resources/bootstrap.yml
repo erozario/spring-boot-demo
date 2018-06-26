@@ -3,6 +3,8 @@ spring:
     name: demoapp
   datasource:
     url: jdbc:postgresql://${DB_SERVER:db}:${DB_PORT:5432}/${DB_NAME:demoapp}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
   data:
     rest:
       base-path: /data
@@ -15,6 +17,3 @@ spring:
       port: ${VAULT_PORT:8200}
       scheme: http
       token: ${VAULT_TOKEN}
-      database:
-        enabled: true
-        role: ${VAULT_ROLE:springdemo}

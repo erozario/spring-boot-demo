@@ -56,10 +56,10 @@ sed -i s/root_token/`echo $VAULT_ROOT_TOKEN`/g vault_root.sh
 psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 5432
 ```
 
-* Enable the database secrets engine
+* Write credentials in KV
 
 ```shell
-./vault_root.sh secrets enable database
+./vault_root.sh write secret/demoapp spring.datasource.username=demoapp spring.datasource.password=123456
 ```
 
 * Setup vault policy
@@ -69,35 +69,6 @@ curl \
   -H "X-Vault-Token: $VAULT_ROOT_TOKEN" \
   --request PUT --data @./vault/demoapp.json \
   http://localhost:8200/v1/sys/policy/demoapp
-```
-
-* Setup the connection from Vault to PostgreSQL
-
-```shell
-./vault_root.sh write database/config/demodb plugin_name=postgresql-database-plugin allowed_roles=springdemo \
-    connection_url="postgresql://{{username}}:{{password}}@db:5432/demoapp?sslmode=disable" \
-    username="vaultadmin" \
-    password="superinsecure"
-```
-
-* Create a database role definition for the spring demo application
-
-```shell
-./vault_root.sh write database/roles/springdemo db_name=demodb \
-  "creation_statements=CREATE ROLE \"{{name}}\" IN ROLE grp_demo_app_user LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';" \
-  default_ttl=24h max_ttl=72h
-```
-
-* Try to retrieve database credentials
-
-```shell
-./vault_root.sh read database/creds/springdemo
-```
-
-* Try to connect to PostgreSQL with these credentials
-
-```shell
-psql -h localhost -U <username-from-vault-output> --port 5432 demoapp
 ```
 
 * Use vault to create a new application token:

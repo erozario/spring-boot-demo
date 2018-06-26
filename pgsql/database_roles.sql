@@ -11,6 +11,9 @@ CREATE ROLE vaultadmin WITH NOCREATEDB
   LOGIN
   PASSWORD 'superinsecure';
 
+-- create a user for demooapp
+CREATE ROLE demoapp IN ROLE grp_demo_app_user LOGIN PASSWORD '123456';
+
 CREATE TABLE message (
   id      BIGSERIAL PRIMARY KEY,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
