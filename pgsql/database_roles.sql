@@ -4,13 +4,6 @@ CREATE ROLE grp_demo_app_user
 
 \c demoapp
 
--- create a user for vault
-CREATE ROLE vaultadmin WITH NOCREATEDB
-  CREATEROLE
-  ADMIN grp_demo_app_user
-  LOGIN
-  PASSWORD 'superinsecure';
-
 -- create a user for demooapp
 CREATE ROLE demoapp IN ROLE grp_demo_app_user LOGIN PASSWORD '123456';
 
