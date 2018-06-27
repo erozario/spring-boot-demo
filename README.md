@@ -48,7 +48,7 @@ docker-compose exec -e VAULT_ADDR=http://127.0.0.1:8200 vault \
 sed -i s/root_token/`echo $VAULT_ROOT_TOKEN`/g vault_root.sh
 ```
 
-### Configure the database secrets engine with PostgreSQL
+### Create database and write credentials in KV
 
 * Setup database and roles (password: insecure)
 
@@ -60,6 +60,12 @@ psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 543
 
 ```shell
 ./vault_root.sh write secret/demoapp spring.datasource.username=demoapp spring.datasource.password=123456
+```
+
+* Read credentials in KV
+
+```shell
+./vault_root.sh read secret/demoapp 
 ```
 
 * Setup vault policy
