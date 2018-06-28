@@ -50,10 +50,10 @@ sed -i s/root_token/`echo $VAULT_ROOT_TOKEN`/g vault_root.sh
 
 ### Create database and write credentials in KV
 
-* Setup database and roles (password: insecure)
+* Setup database and roles
 
 ```shell
-psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 5432
+export PGPASSWORD='insecure'; psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 5432
 ```
 
 * Write credentials in KV
@@ -73,7 +73,7 @@ psql -h localhost -U postgres -d postgres -f pgsql/database_roles.sql --port 543
 ```shell
 curl \
   -H "X-Vault-Token: $VAULT_ROOT_TOKEN" \
-  --request PUT --data @./vault/demoapp.json \
+  --request PUT --data '@./vault/demoapp.json' \
   http://localhost:8200/v1/sys/policy/demoapp
 ```
 
